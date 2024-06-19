@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:student_smile/core/core.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
-    super.key,
-    required this.title,
-    this.icon,
-    this.validator,
-    this.obscureText = false,
-    this.readOnly = false,
-    this.keyboardType,
-    this.controller,
-    this.onTap,
-  });
+  CustomTextField(
+      {super.key,
+      required this.title,
+      this.icon,
+      this.validator,
+      this.obscureText = false,
+      this.readOnly = false,
+      this.keyboardType,
+      this.controller,
+      this.onTap,
+      this.color = const Color(0xffF1FCFE)});
   final String title;
   final IconData? icon;
   final dynamic validator;
@@ -23,14 +23,14 @@ class CustomTextField extends StatelessWidget {
   final bool readOnly;
   final TextInputType? keyboardType;
   var onTap;
+  Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 5),
-      decoration: const BoxDecoration(
-          color: Color(0xffF1FCFE),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.all(Radius.circular(10))),
       child: TextFormField(
         onTap: onTap,
         controller: controller,

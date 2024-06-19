@@ -11,7 +11,7 @@ class MainScreen extends StatelessWidget {
     return GetBuilder(
       init: MainController(),
       builder: (controller) => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(backgroundColor: Palette.primary),
         drawer: SafeArea(child: drawer(context)),
         body: controller.currentScreen,
       ),
@@ -60,15 +60,15 @@ class MainScreen extends StatelessWidget {
             ),
             component(controller, context, "Home", Images.home, 0),
             component(
-                controller, context, "Departments", Images.departiment, 0),
+                controller, context, "Departments", Images.departiment, 1),
             component(
-                controller, context, "Daily appointments", Images.calendar, 0),
+                controller, context, "Daily appointments", Images.calendar, 2),
             component(controller, context, "User manual", Images.userManual, 0),
             component(
-                controller, context, "Laboratory pieces", Images.piece, 0),
+                controller, context, "Laboratory pieces", Images.piece, 4),
             component(controller, context, "About", Images.info, 0),
             component(controller, context, "Settings", Images.settings, 0),
-            component(controller, context, "Logout", Images.logout, 0),
+            component(controller, context, "Logout", Images.logout, 7),
           ],
         ),
       ),
@@ -90,6 +90,11 @@ class MainScreen extends StatelessWidget {
           color: Colors.white24, borderRadius: BorderRadius.circular(25)),
       child: InkWell(
         onTap: () {
+          if (index == 7) {
+            Get.back();
+            controller.logout();
+            return;
+          }
           controller.changeSelectedValue(index);
           Get.back();
         },
