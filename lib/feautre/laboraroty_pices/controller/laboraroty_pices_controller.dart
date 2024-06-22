@@ -148,10 +148,11 @@ class LaborarotyPicesController extends GetxController {
     update();
   }
 
-  void deleteProduct(int id) {
+  void deleteProduct(int id) async {
     try {
+      await LaborarotyPicesService.deleteTool(id);
       requiredMaterial.removeWhere((material) => material.id == id);
-      // update();
+      update();
     } catch (e) {
       rethrow;
     }

@@ -152,7 +152,9 @@ class SessionDetailsPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedBtn(
               title: "Show Medical Record",
-              onPressed: () {},
+              onPressed: () {
+                Get.to(HealthRecordScreen(dailyAppoint: dailyAppoint));
+              },
               width: 300,
               height: 45,
             ),
@@ -160,7 +162,7 @@ class SessionDetailsPage extends StatelessWidget {
             ElevatedBtn(
               title: "Add tool required",
               onPressed: () {
-                _controller.showLabItemsDialog(context,dailyAppoint);
+                _controller.showLabItemsDialog(context, dailyAppoint);
               },
               width: 300,
               height: 45,

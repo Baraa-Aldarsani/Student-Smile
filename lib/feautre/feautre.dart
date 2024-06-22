@@ -4,3 +4,6 @@ export 'boarding/boarding.dart';
 export 'department/department.dart';
 export 'laboraroty_pices/laboraroty_pices.dart';
 export 'daily_appointment/daily_appointment.dart';
+export 'patient/patient.dart';
+export 'diagnosis_appointment/diagnosis_appointment.dart';
+export 'health_record/health_record.dart';

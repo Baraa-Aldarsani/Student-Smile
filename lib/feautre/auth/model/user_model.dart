@@ -6,7 +6,7 @@ class UserModel {
   String? birthday;
   String? year;
   String? specialization;
-  String? image;
+  int? unNumber;
   String? token;
 
   UserModel({
@@ -17,11 +17,25 @@ class UserModel {
     this.birthday,
     this.year,
     this.specialization,
-    this.image,
+    this.unNumber,
     this.token,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json,
+      {bool getProfile = false}) {
+    if (getProfile) {
+      return UserModel(
+        firstName: (json['first_name'] != null) ? json['first_name'] : '',
+        lastName: (json['last_name'] != null) ? json['last_name'] : '',
+        email: json['email'],
+        gender: (json['gender'] != null) ? json['gender'] : '',
+        birthday: (json['birthday'] != null) ? json['birthday'] : '',
+        year: (json['year'] != null) ? json['year'] : '',
+        specialization:
+            (json['specialization'] != null) ? json['specialization'] : '',
+        unNumber: json['university_number'],
+      );
+    }
     return UserModel(
       email: json['email'] ?? '',
       token: json['token'],
@@ -36,7 +50,6 @@ class UserModel {
       'gender': gender,
       'birthday': birthday,
       'year': year,
-      'image': image,
       'specialization': specialization,
       'token': token,
     };

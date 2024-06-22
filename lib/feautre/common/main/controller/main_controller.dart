@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_smile/apis/apis.dart';
 import 'package:student_smile/feautre/feautre.dart';
 import 'package:student_smile/core/core.dart';
 
 class MainController extends GetxController {
   Widget _currentScreen = HomeScreen();
   get currentScreen => _currentScreen;
+  @override
+  void onInit() {
+    getInotUser();
+    super.onInit();
+  }
+
   void changeSelectedValue(int selected) {
     update();
     switch (selected) {
@@ -26,10 +33,20 @@ class MainController extends GetxController {
         }
       case 3:
         {
-          _currentScreen = HomeScreen();
+          _currentScreen = DiagnosisAppointmentView();
           break;
         }
       case 4:
+        {
+          _currentScreen = PatientView();
+          break;
+        }
+      case 5:
+        {
+          _currentScreen = HomeScreen();
+          break;
+        }
+      case 6:
         {
           _currentScreen = LaborarotyPicesView();
           break;
@@ -43,6 +60,17 @@ class MainController extends GetxController {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
+  }
+
+  var profileData = UserModel();
+
+  Future<void> getInotUser() async {
+    try {
+      final UserModel fetchedUser = await AuthService.getUserInfo();
+      profileData = fetchedUser;
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 

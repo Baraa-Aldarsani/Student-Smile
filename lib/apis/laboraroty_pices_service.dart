@@ -49,4 +49,17 @@ class LaborarotyPicesService {
       throw Exception('Failed to add Equipment');
     }
   }
+
+  static Future<void> deleteTool(int id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http.delete(
+        Uri.parse('$BASE_URL/profile/destroyTools?id=$id'),
+        headers: {'Authorization': 'Bearer $token'});
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Success delete tool is $id");
+    } else {
+      throw Exception('Failed to delete tool');
+    }
+  }
 }
