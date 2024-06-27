@@ -22,8 +22,8 @@ class HomeService {
       throw Exception('Failed to fetch patient from section');
     }
   }
-  static Future<List<PatientFromSectionModel>>
-      getPatientFromSudent() async {
+
+  static Future<List<PatientFromSectionModel>> getPatientFromSudent() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
@@ -37,6 +37,38 @@ class HomeService {
           .toList();
     } else {
       throw Exception('Failed to fetch patient from studnet');
+    }
+  }
+
+  static Future<void> acceptReffera(int id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http
+        .put(Uri.parse("$BASE_URL/profile/acceptMyReferral"), headers: {
+      'Authorization': 'Bearer $token'
+    }, body: {
+      "referral_id": id.toString(),
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Success accept refferal");
+    } else {
+      throw Exception('Failed to accept refferal');
+    }
+  }
+
+  static Future<void> rejectReffera(int id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http
+        .put(Uri.parse("$BASE_URL/profile/rejectMyReferral"), headers: {
+      'Authorization': 'Bearer $token'
+    }, body: {
+      "referral_id": id.toString(),
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Success reject refferal");
+    } else {
+      throw Exception('Failed to reject refferal');
     }
   }
 }

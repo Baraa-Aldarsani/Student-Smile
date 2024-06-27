@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:student_smile/feautre/feautre.dart';
 
 class DailyAppointmentService {
-  static Future<List<DailyAppointmentModel>> getInfoDepartment(
+  static Future<List<DailyAppointmentModel>> getDailyAppointment(
       String date) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
@@ -74,7 +74,8 @@ class DailyAppointmentService {
     request.headers['Authorization'] = 'Bearer $token';
     request.fields['session_id'] = dailyAppoint.sessionModel.id.toString();
     // request.fields['patient_id'] = dailyAppoint.sessionModel.id.toString();
-    request.fields['patient_id'] = '1';
+    request.fields['patient_id'] =
+        dailyAppoint.referralsModel.patient.id.toString();
     int i = 0;
     for (var item in submitTools) {
       request.fields['tools[$i][laboratoryTools_id]'] = item.id.toString();
@@ -85,6 +86,26 @@ class DailyAppointmentService {
       print("success add List Tools");
     } else {
       throw Exception('Failed to add List Tools');
+    }
+  }
+
+  static Future<List<LaborarotyPicesModel>> getAllTool(
+      DailyAppointmentModel dailyAppoin) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http.get(
+        Uri.parse(
+            '$BASE_URL/profile/studentPatientToolsRequired?session_id=${dailyAppoin.sessionModel.id}&patient_id=${dailyAppoin.referralsModel.patient.id}'),
+        headers: {'Authorization': 'Bearer $token'});
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final List<dynamic> data = json.decode(response.body)['data'];
+      return data
+          .map<LaborarotyPicesModel>((jsonData) =>
+              LaborarotyPicesModel.fromJson(jsonData, allTool: true))
+          .toList();
+    } else {
+      throw Exception('Failed to fetch all tool');
     }
   }
 }

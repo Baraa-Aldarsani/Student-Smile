@@ -79,7 +79,9 @@ class HealthRecordScreen extends StatelessWidget {
                           onStepContinue: step.currentStep < 2
                               ? step.stepContinue
                               : () {
-                                  step.showAlertDialog(1);
+                                  step.showAlertDialog(
+                                    dailyAppoint.referralsModel.patient.id,
+                                  );
                                 },
                           onStepCancel: step.stepCancel,
                           steps: <Step>[

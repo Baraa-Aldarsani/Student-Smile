@@ -31,7 +31,7 @@ class DailyAppointmentController extends GetxController {
   Future<void> getDailyAppointment(String date) async {
     isLoading.value = true;
     try {
-      final fetchData = await DailyAppointmentService.getInfoDepartment(date);
+      final fetchData = await DailyAppointmentService.getDailyAppointment(date);
       daily.assignAll(fetchData);
       update();
     } catch (e) {
@@ -177,6 +177,8 @@ class DailyAppointmentController extends GetxController {
     }
   }
 
+  
+
   Future<void> addListTool(DailyAppointmentModel dailyAppoint, context) async {
     try {
       ScaffoldMessenger.of(context)
@@ -189,7 +191,7 @@ class DailyAppointmentController extends GetxController {
         ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('You should add tools'),
+          content: Text('Faild update session'),
           backgroundColor: Palette.red,
         ));
       }
@@ -201,6 +203,61 @@ class DailyAppointmentController extends GetxController {
       ));
       rethrow;
     }
+  }
+
+  void showLabItemsDialogTool(
+      BuildContext context, DailyAppointmentModel dailyAppoint) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('All tool for session'),
+          content: SingleChildScrollView(
+            child: FutureBuilder(
+                future: _controller.getToolReqDaily(dailyAppoint),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    return SizedBox(
+                      height: 300,
+                      child: GetBuilder(
+                        init: LaborarotyPicesController(),
+                        builder: (controller) => ListView.builder(
+                            itemCount: controller.allTool.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(controller.allTool[index].name),
+                                leading: Image.network(
+                                  controller.allTool[index].image,
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }),
+                      ),
+                    );
+                  }
+                }),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel', style: TextStyle(color: Palette.red)),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            TextButton(
+              child: const Text('Ok', style: TextStyle(color: Palette.primary)),
+              onPressed: () async {
+                Get.back();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

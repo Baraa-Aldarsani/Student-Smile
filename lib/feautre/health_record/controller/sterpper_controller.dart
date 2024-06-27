@@ -90,7 +90,7 @@ class StepperController extends GetxController {
                     ?.copyWith(color: Palette.red),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
               },
             ),
             TextButton(

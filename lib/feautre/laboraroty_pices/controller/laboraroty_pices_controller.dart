@@ -184,4 +184,16 @@ class LaborarotyPicesController extends GetxController {
     isChecked.value = List<bool>.filled(requiredMaterial.length, false);
     update();
   }
+
+  var allTool = <LaborarotyPicesModel>[].obs;
+
+  Future<void> getToolReqDaily(DailyAppointmentModel dailyAppoin) async {
+    try {
+      final List<LaborarotyPicesModel> fetchData =
+          await DailyAppointmentService.getAllTool(dailyAppoin);
+      allTool.assignAll(fetchData);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

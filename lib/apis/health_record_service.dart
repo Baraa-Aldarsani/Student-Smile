@@ -10,7 +10,7 @@ class HealthRecordService {
   static Future<List<DiseasesModel>> fetchDiseases() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
-    final response = await http.get(Uri.parse('$BASE_URL/profile/viewDiseases'),
+    final response = await http.get(Uri.parse('$BASE_URL/profile/viewDisease'),
         headers: {'Authorization': 'Bearer $token'});
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {

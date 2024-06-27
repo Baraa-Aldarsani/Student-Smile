@@ -11,6 +11,7 @@ class PatientSevice {
     final response = await http.get(
         Uri.parse('$BASE_URL/profile/studentPatientNow'),
         headers: {'Authorization': 'Bearer $token'});
+    print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> nestedData = json.decode(response.body)['data'];
       List<dynamic> allPatients = [];
@@ -40,6 +41,24 @@ class PatientSevice {
           .toList();
     } else {
       throw Exception('Failed to fetch patient Session');
+    }
+  }
+
+  static Future<List<UserModel>> getAllStudent() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http.get(
+        Uri.parse('$BASE_URL/profile/allStudentView'),
+        headers: {'Authorization': 'Bearer $token'});
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final List<dynamic> data = json.decode(response.body)['data'];
+      return data
+          .map<UserModel>(
+              (jsonData) => UserModel.fromJson(jsonData, getProfile: true))
+          .toList();
+    } else {
+      throw Exception('Failed to fetch all Student');
     }
   }
 }

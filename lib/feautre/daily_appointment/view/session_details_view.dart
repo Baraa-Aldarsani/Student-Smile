@@ -29,12 +29,13 @@ class SessionDetailsPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Patient Name',
+                      const Text('Patient Name',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Baraa Aldarsani'),
+                      Text(
+                          "${dailyAppoint.referralsModel.patient.fName} ${dailyAppoint.referralsModel.patient.lName}"),
                     ],
                   ),
                   const Divider(
@@ -126,46 +127,71 @@ class SessionDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: ElevatedBtn(
-                title: "Update Session",
-                onPressed: () {
-                  _controller.bottomSheetUpdate(dailyAppoint);
-                },
-                width: 300,
-                height: 45,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MaterialButton(
+                  shape: const StadiumBorder(),
+                  color: Palette.primaryLight,
+                  onPressed: () {
+                    _controller.bottomSheetUpdate(dailyAppoint);
+                  },
+                  child: const Text(
+                    "Update",
+                    style: TextStyle(color: Palette.text),
+                  ),
+                ),
+                MaterialButton(
+                  shape: const StadiumBorder(),
+                  color: Palette.primary,
+                  onPressed: () {
+                    _controller.showLabItemsDialog(context, dailyAppoint);
+                  },
+                  child: const Text(
+                    "Add Tool",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                MaterialButton(
+                  shape: const StadiumBorder(),
+                  color: Palette.primaryDark,
+                  onPressed: () {
+                    _controller.bottomSheetAdd(dailyAppoint);
+                  },
+                  child: const Text(
+                    "Add",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedBtn(
-                title: "Add New Session",
-                onPressed: () {
-                  _controller.bottomSheetAdd(dailyAppoint);
-                },
-                width: 300,
-                height: 45,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedBtn(
-              title: "Show Medical Record",
-              onPressed: () {
-                Get.to(HealthRecordScreen(dailyAppoint: dailyAppoint));
-              },
-              width: 300,
-              height: 45,
-            ),
-            const SizedBox(height: 20),
-            ElevatedBtn(
-              title: "Add tool required",
-              onPressed: () {
-                _controller.showLabItemsDialog(context, dailyAppoint);
-              },
-              width: 300,
-              height: 45,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MaterialButton(
+                  shape: const StadiumBorder(),
+                  color: Palette.primaryHelp,
+                  onPressed: () {
+                    Get.to(HealthRecordScreen(dailyAppoint: dailyAppoint));
+                  },
+                  child: const Text(
+                    "Health Record",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                MaterialButton(
+                  shape: const StadiumBorder(),
+                  color: Palette.primaryHelp,
+                  onPressed: () {
+                    _controller.showLabItemsDialogTool(context, dailyAppoint);
+                  },
+                  child: const Text(
+                    "Tool Required",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -14,7 +14,6 @@ class DailyAppointmentModel {
   });
 
   factory DailyAppointmentModel.fromJson(Map<String, dynamic> json) {
-    print("object");
     return DailyAppointmentModel(
       sessionModel: SessionModel.fromJson(json),
       supervisorModel: json['supervisor'] != null

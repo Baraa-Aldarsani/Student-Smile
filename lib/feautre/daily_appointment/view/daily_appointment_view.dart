@@ -85,9 +85,9 @@ class DailyAppointmentView extends StatelessWidget {
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Baraa Aldarsani',
-                              style: TextStyle(
+                            Text(
+                              "${dailyApp.referralsModel.patient.fName} ${dailyApp.referralsModel.patient.lName}",
+                              style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(

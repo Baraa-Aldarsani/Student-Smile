@@ -36,4 +36,14 @@ class PatientController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  var allStudent = <UserModel>[].obs;
+  Future<void> getAllStudent() async {
+    try {
+      final List<UserModel> fetchData = await PatientSevice.getAllStudent();
+      allStudent.assignAll(fetchData);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

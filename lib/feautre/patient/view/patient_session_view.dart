@@ -16,85 +16,87 @@ class PatientSessionView extends StatelessWidget {
         title: Text('Number of Sessions ${_controller.patientSession.length}'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Obx(() {
-          if (_controller.isLoading.value) {
-            return ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Card(
-                    elevation: 4,
-                    color: Palette.primaryLight,
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: ListTile(
-                      leading: Container(
-                        width: 40,
-                        height: 40,
-                        color: Colors.white,
+          padding: const EdgeInsets.all(16.0),
+          child: FutureBuilder(
+              future: _controller.getAllPatients(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Card(
+                          elevation: 4,
+                          color: Palette.primaryLight,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Container(
+                              width: 40,
+                              height: 40,
+                              color: Colors.white,
+                            ),
+                            title: Container(
+                              width: double.infinity,
+                              height: 20,
+                              color: Colors.white,
+                            ),
+                            subtitle: Container(
+                              width: double.infinity,
+                              height: 20,
+                              color: Colors.white,
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios,
+                                color: Palette.primary),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                if (_controller.patientSession.isEmpty) {
+                  return const Center(child: Text("No Patient Now."));
+                }
+                return ListView.builder(
+                  itemCount: _controller.patientSession.length,
+                  itemBuilder: (context, index) {
+                    final patientSessions = _controller.patientSession[index];
+                    return Card(
+                      elevation: 4,
+                      color: Palette.primaryLight,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: ListTile(
+                        leading:
+                            const Icon(Icons.event, color: Palette.primary),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Baraa Aldarsani',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              patientSessions.sessionModel.time,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        subtitle: Text(
+                            'Status: ${patientSessions.referralsModel.status}\nSupervisor: ${patientSessions.supervisorModel.fName} ${patientSessions.supervisorModel.lName}'),
+                        trailing: const Icon(Icons.arrow_forward_ios,
+                            color: Palette.primary),
+                        onTap: () {
+                          Get.to(() => SessionDetailsPage(
+                              dailyAppoint: patientSessions));
+                        },
                       ),
-                      title: Container(
-                        width: double.infinity,
-                        height: 20,
-                        color: Colors.white,
-                      ),
-                      subtitle: Container(
-                        width: double.infinity,
-                        height: 20,
-                        color: Colors.white,
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios,
-                          color: Palette.primary),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-          if (_controller.patientSession.isEmpty) {
-            return const Center(
-                child: Text("No appointments for selected date."));
-          }
-          return ListView.builder(
-            itemCount: _controller.patientSession.length,
-            itemBuilder: (context, index) {
-              final patientSessions = _controller.patientSession[index];
-              return Card(
-                elevation: 4,
-                color: Palette.primaryLight,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: const Icon(Icons.event, color: Palette.primary),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Baraa Aldarsani',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        patientSessions.sessionModel.time,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  subtitle: Text(
-                      'Status: ${patientSessions.referralsModel.status}\nSupervisor: ${patientSessions.supervisorModel.fName} ${patientSessions.supervisorModel.lName}'),
-                  trailing: const Icon(Icons.arrow_forward_ios,
-                      color: Palette.primary),
-                  onTap: () {
-                    Get.to(SessionDetailsPage(dailyAppoint: patientSessions));
+                    );
                   },
-                ),
-              );
-            },
-          );
-        }),
-      ),
+                );
+              })),
     );
   }
 }

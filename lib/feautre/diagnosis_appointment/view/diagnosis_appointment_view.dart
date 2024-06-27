@@ -48,48 +48,53 @@ class DiagnosisAppointmentView extends StatelessWidget {
           );
         }
         if (_controller.diagnosis.isEmpty) {
-          return const Center(
-              child: Text("No appointments for selected date."));
+          return const Center(child: Text("No diagnosis appointments."));
         }
 
-        return ListView.builder(
-          itemCount: _controller.diagnosis.length,
-          itemBuilder: (context, index) {
-            final diagnosis = _controller.diagnosis[index];
-            return Card(
-              color: Palette.primaryLight,
-              margin: const EdgeInsets.all(10),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(10),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(diagnosis.patient.image),
-                  radius: 30,
+        return GetBuilder(
+          init: DiagnosisAppointmentController(),
+          builder: (controller) => ListView.builder(
+            itemCount: controller.diagnosis.length,
+            itemBuilder: (context, index) {
+              final diagnosis = controller.diagnosis[index];
+              return Card(
+                color: Palette.primaryLight,
+                margin: const EdgeInsets.all(10),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                title: Text(
-                  '${diagnosis.patient.fName} ${diagnosis.patient.lName}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(10),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(diagnosis.patient.image),
+                    radius: 30,
                   ),
+                  title: Text(
+                    '${diagnosis.patient.fName} ${diagnosis.patient.lName}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text('Email: ${diagnosis.patient.email}'),
+                      Text('Gender: ${diagnosis.patient.gender}'),
+                      Text('Birthday: ${diagnosis.patient.birthday}'),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    controller.showLabItemsDialog(
+                        context, controller.diagnosis[index]);
+                  },
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 5),
-                    Text('Email: ${diagnosis.patient.email}'),
-                    Text('Gender: ${diagnosis.patient.gender}'),
-                    Text('Birthday: ${diagnosis.patient.birthday}'),
-                  ],
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );
