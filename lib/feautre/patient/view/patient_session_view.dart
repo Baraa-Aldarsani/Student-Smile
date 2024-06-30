@@ -14,6 +14,8 @@ class PatientSessionView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text('Number of Sessions ${_controller.patientSession.length}'),
+        
+        
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),

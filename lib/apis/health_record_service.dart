@@ -11,7 +11,7 @@ class HealthRecordService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(Uri.parse('$BASE_URL/profile/viewDisease'),
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},);
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
@@ -33,7 +33,8 @@ class HealthRecordService {
     final token = preferences.get('token') ?? 0;
     final request = http.MultipartRequest(
         'POST', Uri.parse('$BASE_URL/profile/updateHealthRecord'));
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = basicAuth;
+    request.headers['X-Token'] = 'Bearer $token';
     request.fields['patient_id'] = patientID.toString();
     int i = 0;
     for (var radiograph in imageListRadiographs) {
@@ -72,12 +73,14 @@ class HealthRecordService {
     final response = await http.get(
         Uri.parse(
             '$BASE_URL/profile/studentPatientHealthRecord?patient_id=$id'),
-        headers: {'Authorization': 'Bearer $token'});
+       headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},);
     final responseJson = json.decode(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       if (responseJson['status'] == false) {
         throw Exception('Failed to fetch Health Record: Status is false');
       }
+      print(id);
       return HealthRecordModel.fromJson(json.decode(response.body)['data']);
     } else {
       throw Exception('Failed to fetch Health Record');

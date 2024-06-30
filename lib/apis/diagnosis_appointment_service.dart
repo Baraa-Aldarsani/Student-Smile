@@ -9,8 +9,9 @@ class DiagnosisAppointmentService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/studentDiagnosisCases'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/studentDiagnosisCases'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> nestedData = json.decode(response.body)['data'];
       List<dynamic> allPatients = [];
@@ -30,8 +31,9 @@ class DiagnosisAppointmentService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/tupeOfSections'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/tupeOfSections'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
 
@@ -49,7 +51,8 @@ class DiagnosisAppointmentService {
     final token = preferences.get('token') ?? 0;
     final request = http.MultipartRequest(
         'POST', Uri.parse('$BASE_URL/profile/addPatientCases'));
-    request.headers['Authorization'] = 'Bearer $token';
+     request.headers['Authorization'] = basicAuth;
+    request.headers['X-Token'] = 'Bearer $token';
     request.fields['diagnosis_appointments_id'] = diagnosisApp.id.toString();
     int i = 0;
     for (var cases in typeCases) {

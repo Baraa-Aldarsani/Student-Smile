@@ -9,9 +9,10 @@ class PatientSevice {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/studentPatientNow'),
-        headers: {'Authorization': 'Bearer $token'});
-    print(response.statusCode);
+      Uri.parse('$BASE_URL/profile/studentPatientNow'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> nestedData = json.decode(response.body)['data'];
       List<dynamic> allPatients = [];
@@ -30,8 +31,9 @@ class PatientSevice {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/studentPatientSessions?patient_id=$id'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/studentPatientSessions?patient_id=$id'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data']['sessions'];
@@ -48,9 +50,10 @@ class PatientSevice {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/allStudentView'),
-        headers: {'Authorization': 'Bearer $token'});
-    print(response.statusCode);
+      Uri.parse('$BASE_URL/profile/allStudentView'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
       return data
@@ -59,6 +62,25 @@ class PatientSevice {
           .toList();
     } else {
       throw Exception('Failed to fetch all Student');
+    }
+  }
+
+  static Future<void> sendStudent(int studentId, int patientId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final token = preferences.get('token') ?? 0;
+    final response = await http
+        .post(Uri.parse('$BASE_URL/profile/studentSendCases'), headers: {
+      'X-Token': 'Bearer $token',
+      'Authorization': basicAuth
+    }, body: {
+      'student_id': studentId.toString(),
+      'patient_cases_id': patientId.toString(),
+      'note': "No Notes",
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Success send Student");
+    } else {
+      throw Exception('Failed to send Student');
     }
   }
 }

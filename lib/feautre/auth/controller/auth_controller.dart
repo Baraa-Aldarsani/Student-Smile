@@ -20,6 +20,15 @@ class AuthController extends GetxController {
     return regex.hasMatch(password);
   }
 
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    unNumberController.dispose();
+    super.dispose();
+  }
+
   void clearData() {
     emailController.clear();
     passwordController.clear();

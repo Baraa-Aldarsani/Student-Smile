@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:student_smile/core/core.dart';
 import 'package:student_smile/feautre/diagnosis_appointment/diagnosis_appointment.dart';
+import 'package:student_smile/feautre/feautre.dart';
 
 class DiagnosisAppointmentView extends StatelessWidget {
   DiagnosisAppointmentView({super.key});
@@ -67,8 +69,21 @@ class DiagnosisAppointmentView extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(10),
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(diagnosis.patient.image),
                     radius: 30,
+                    child:CachedNetworkImage(
+                      imageUrl: '${controller.diagnosis[index].patient.image}',
+                      httpHeaders: {
+                        'X-Token': 'Bearer $tokens()',
+                        'Authorization': basicAuth
+                      },
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                      width: 200,
+                      height: double.infinity,
+                    ),
                   ),
                   title: Text(
                     '${diagnosis.patient.fName} ${diagnosis.patient.lName}',

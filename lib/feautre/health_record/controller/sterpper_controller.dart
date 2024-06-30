@@ -277,6 +277,7 @@ class StepperController extends GetxController {
           await HealthRecordService.getHealthRecord(id);
 
       healthRecord = fetchData;
+      print(healthRecord.diseases!.length);
       isLoading(false);
     } catch (e) {
       isLoading(false);

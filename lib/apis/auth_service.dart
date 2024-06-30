@@ -9,7 +9,10 @@ class AuthService {
       String email, String password) async {
     const url = '$BASE_URL/auth/login';
     final body = jsonEncode({'email': email, 'password': password});
-    final headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': basicAuth
+    };
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -25,7 +28,10 @@ class AuthService {
     const url = '$BASE_URL/auth/register';
     final body = jsonEncode(
         {'email': email, 'password': password, 'university_number': unNumber});
-    final headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': basicAuth
+    };
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -40,8 +46,10 @@ class AuthService {
     const url = '$BASE_URL/profile/studentProfileView';
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
-    final response = await http
-        .get(Uri.parse(url), headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return UserModel.fromJson(json.decode(response.body)['data'],

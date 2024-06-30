@@ -68,7 +68,13 @@ class PatientView extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(10),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(patient.image),
+                      backgroundImage: NetworkImage(
+                        patient.image,
+                        headers: {
+                          'X-Token': 'Bearer $tokens()',
+                          'Authorization': basicAuth
+                        },
+                      ),
                       radius: 30,
                     ),
                     title: Text(

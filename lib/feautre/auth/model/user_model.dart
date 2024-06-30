@@ -1,4 +1,5 @@
 class UserModel {
+  int? id;
   String? firstName;
   String? lastName;
   String? email;
@@ -10,6 +11,7 @@ class UserModel {
   String? token;
 
   UserModel({
+    this.id,
     this.firstName,
     this.lastName,
     this.email,
@@ -25,6 +27,7 @@ class UserModel {
       {bool getProfile = false}) {
     if (getProfile) {
       return UserModel(
+        id: json['id'],
         firstName: (json['first_name'] != null) ? json['first_name'] : '',
         lastName: (json['last_name'] != null) ? json['last_name'] : '',
         email: json['email'],

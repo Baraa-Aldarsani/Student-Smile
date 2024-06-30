@@ -136,6 +136,10 @@ class DailyAppointmentController extends GetxController {
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
+                                  headers: {
+                                    'X-Token': 'Bearer $tokens()',
+                                    'Authorization': basicAuth
+                                  },
                                 ),
                                 onChanged: (bool? value) {
                                   controller.toggleCheckbox(index, value);
@@ -176,8 +180,6 @@ class DailyAppointmentController extends GetxController {
       }
     }
   }
-
-  
 
   Future<void> addListTool(DailyAppointmentModel dailyAppoint, context) async {
     try {
@@ -233,6 +235,10 @@ class DailyAppointmentController extends GetxController {
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
+                                  headers: {
+                                    'X-Token': 'Bearer $tokens()',
+                                    'Authorization': basicAuth
+                                  },
                                 ),
                               );
                             }),

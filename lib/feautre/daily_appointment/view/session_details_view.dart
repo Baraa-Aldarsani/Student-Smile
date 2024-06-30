@@ -9,12 +9,22 @@ class SessionDetailsPage extends StatelessWidget {
   SessionDetailsPage({super.key, required this.dailyAppoint});
   final DailyAppointmentController _controller =
       Get.put(DailyAppointmentController());
+  final PatientController _patient = Get.put(PatientController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text('Session Details'),
+        actions: [
+          IconButton(
+              color: Palette.primary,
+              onPressed: () async {
+                _patient.showLabItemsDialogTool(
+                    context, dailyAppoint.referralsModel.pateintId);
+              },
+              icon: const Icon(Icons.stacked_bar_chart))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

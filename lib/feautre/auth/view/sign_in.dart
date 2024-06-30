@@ -61,11 +61,12 @@ class SignIn extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Email cannot be empty';
                         }
-                        
                       },
+                      keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 20.h),
                     CustomTextField(
+                      keyboardType: TextInputType.text,
                       controller: _controller.passwordController,
                       title: "Password",
                       icon: Icons.lock,

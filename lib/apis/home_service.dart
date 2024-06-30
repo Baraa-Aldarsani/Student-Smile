@@ -10,8 +10,9 @@ class HomeService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/convertFromSection'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/convertFromSection'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
       return data
@@ -27,8 +28,9 @@ class HomeService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/convertFromStudent'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/convertFromStudent'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
       return data
@@ -45,11 +47,14 @@ class HomeService {
     final token = preferences.get('token') ?? 0;
     final response = await http
         .put(Uri.parse("$BASE_URL/profile/acceptMyReferral"), headers: {
-      'Authorization': 'Bearer $token'
+      'X-Token': 'Bearer $token',
+      'Authorization': basicAuth
     }, body: {
       "referral_id": id.toString(),
     });
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    print(id);
+    print(response.statusCode);
+    if (true) {
       print("Success accept refferal");
     } else {
       throw Exception('Failed to accept refferal');
@@ -61,7 +66,8 @@ class HomeService {
     final token = preferences.get('token') ?? 0;
     final response = await http
         .put(Uri.parse("$BASE_URL/profile/rejectMyReferral"), headers: {
-      'Authorization': 'Bearer $token'
+      'X-Token': 'Bearer $token',
+      'Authorization': basicAuth
     }, body: {
       "referral_id": id.toString(),
     });

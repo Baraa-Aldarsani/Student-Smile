@@ -10,6 +10,7 @@ class LaborarotyPicesView extends StatelessWidget {
   LaborarotyPicesView({super.key});
   final LaborarotyPicesController _controller =
       Get.put(LaborarotyPicesController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,6 +150,10 @@ class LaborarotyPicesView extends StatelessWidget {
                             child: CachedNetworkImage(
                               imageUrl:
                                   controller.requiredMaterial[index].image,
+                              httpHeaders: {
+                                'X-Token': 'Bearer $tokens()',
+                                'Authorization': basicAuth
+                              },
                               placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: Palette.grey,
                                 highlightColor: Palette.primaryLight,

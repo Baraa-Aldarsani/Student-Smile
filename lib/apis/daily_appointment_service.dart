@@ -10,8 +10,9 @@ class DailyAppointmentService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse('$BASE_URL/profile/studentAppointments?history=$date'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/studentAppointments?history=$date'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
@@ -30,7 +31,7 @@ class DailyAppointmentService {
     final token = preferences.get('token') ?? 0;
     final response = await http.post(
       Uri.parse('$BASE_URL/profile/addSession'),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
       body: {
         "clinic_id": clinicID.toString(),
         "referrals_id": referralsID.toString(),
@@ -51,7 +52,7 @@ class DailyAppointmentService {
     final token = preferences.get('token') ?? 0;
     final response = await http.put(
       Uri.parse('$BASE_URL/profile/updateSession'),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
       body: {
         "session_id": sessionID.toString(),
         "status_of_session": status,
@@ -71,7 +72,8 @@ class DailyAppointmentService {
     final token = preferences.get('token') ?? 0;
     final request = http.MultipartRequest(
         'POST', Uri.parse('$BASE_URL/profile/toolsRequired'));
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = basicAuth;
+    request.headers['X-Token'] = 'Bearer $token';
     request.fields['session_id'] = dailyAppoint.sessionModel.id.toString();
     // request.fields['patient_id'] = dailyAppoint.sessionModel.id.toString();
     request.fields['patient_id'] =
@@ -94,9 +96,10 @@ class DailyAppointmentService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.get(
-        Uri.parse(
-            '$BASE_URL/profile/studentPatientToolsRequired?session_id=${dailyAppoin.sessionModel.id}&patient_id=${dailyAppoin.referralsModel.patient.id}'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse(
+          '$BASE_URL/profile/studentPatientToolsRequired?session_id=${dailyAppoin.sessionModel.id}&patient_id=${dailyAppoin.referralsModel.patient.id}'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];

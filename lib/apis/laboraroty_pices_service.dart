@@ -12,8 +12,10 @@ class LaborarotyPicesService {
   static Future<List<LaborarotyPicesModel>> getRequiredMaterial() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
-    final response = await http.get(Uri.parse('$BASE_URL/profile/getTools'),
-        headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(
+      Uri.parse('$BASE_URL/profile/getTools'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> data = json.decode(response.body)['data'];
       return data
@@ -30,7 +32,8 @@ class LaborarotyPicesService {
     final token = preferences.get('token') ?? 0;
     final request =
         http.MultipartRequest('POST', Uri.parse('$BASE_URL/profile/addTools'));
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = basicAuth;
+    request.headers['X-Token'] = 'Bearer $token';
     request.fields['details_of_tool'] = name;
 
     var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
@@ -54,8 +57,9 @@ class LaborarotyPicesService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final token = preferences.get('token') ?? 0;
     final response = await http.delete(
-        Uri.parse('$BASE_URL/profile/destroyTools?id=$id'),
-        headers: {'Authorization': 'Bearer $token'});
+      Uri.parse('$BASE_URL/profile/destroyTools?id=$id'),
+      headers: {'X-Token': 'Bearer $token', 'Authorization': basicAuth},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       print("Success delete tool is $id");
     } else {

@@ -24,123 +24,127 @@ class HealthRecordScreen extends StatelessWidget {
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
         ),
         body: Obx(
-          () => Column(
-            children: [
-              SizedBox(
-                height: 40,
-                child: GetBuilder(
-                  init: StepperController(),
-                  builder: (controller) => ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          controller.changeColor(index);
-                        },
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        splashColor: Palette.primaryLight,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2.18,
-                          margin: const EdgeInsets.only(left: 6),
-                          decoration: BoxDecoration(
-                              color: controller.getColorButtons(index),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              border:
-                                  Border.all(width: 1, color: Palette.primary)),
-                          alignment: Alignment.center,
-                          child: Text(
-                            controller.text[index],
-                            style: TextStyle(
-                              color: controller.getColorText(index),
-                              fontSize: 14,
+          () => SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
+                  child: GetBuilder(
+                    init: StepperController(),
+                    builder: (controller) => ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            controller.changeColor(index);
+                          },
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          splashColor: Palette.primaryLight,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 2.18,
+                            margin: const EdgeInsets.only(left: 6),
+                            decoration: BoxDecoration(
+                                color: controller.getColorButtons(index),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(
+                                    width: 1, color: Palette.primary)),
+                            alignment: Alignment.center,
+                            child: Text(
+                              controller.text[index],
+                              style: TextStyle(
+                                color: controller.getColorText(index),
+                                fontSize: 14,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(width: 10),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const SizedBox(width: 10),
+                    ),
                   ),
                 ),
-              ),
-              step.selectedIndexButtons != 0
-                  ? Theme(
-                      data: Theme.of(context).copyWith(
-                        colorScheme: Theme.of(context).colorScheme.copyWith(
-                              primary: Palette.primary,
-                            ),
-                      ),
-                      child: Obx(
-                        () => Stepper(
-                          currentStep: step.currentStep.value,
-                          onStepContinue: step.currentStep < 2
-                              ? step.stepContinue
-                              : () {
-                                  step.showAlertDialog(
-                                    dailyAppoint.referralsModel.patient.id,
-                                  );
-                                },
-                          onStepCancel: step.stepCancel,
-                          steps: <Step>[
-                            _stepOne(),
-                            _stepTwo(),
-                            _stepThree(context),
-                          ],
+                step.selectedIndexButtons != 0
+                    ? Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: Theme.of(context).colorScheme.copyWith(
+                                primary: Palette.primary,
+                              ),
+                        ),
+                        child: Obx(
+                          () => Stepper(
+                            currentStep: step.currentStep.value,
+                            onStepContinue: step.currentStep < 2
+                                ? step.stepContinue
+                                : () {
+                                    step.showAlertDialog(
+                                      dailyAppoint.referralsModel.patient.id,
+                                    );
+                                  },
+                            onStepCancel: step.stepCancel,
+                            steps: <Step>[
+                              _stepOne(),
+                              _stepTwo(),
+                              _stepThree(context),
+                            ],
+                          ),
+                        ),
+                      )
+                    : GetBuilder(
+                        init: StepperController(),
+                        builder: (controller) => FutureBuilder(
+                          future: controller.getHealthRecordData(
+                              dailyAppoint.referralsModel.patient.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Expanded(
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Expanded(
+                                  child: Center(child: Text("Error")));
+                            } else {
+                              return SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (controller
+                                        .healthRecord.radiographs!.isNotEmpty)
+                                      buildSectionTitle(context, 'Radiographs'),
+                                    if (controller
+                                        .healthRecord.radiographs!.isNotEmpty)
+                                      buildAnimatedListRad(
+                                          controller.healthRecord.radiographs!,
+                                          radiographController),
+                                    if (controller
+                                        .healthRecord.medicine!.isNotEmpty)
+                                      buildSectionTitle(context, 'Medicines'),
+                                    if (controller
+                                        .healthRecord.medicine!.isNotEmpty)
+                                      buildAnimatedListMed(
+                                          controller.healthRecord.medicine!,
+                                          medicineController),
+                                    if (controller
+                                        .healthRecord.diseases!.isNotEmpty)
+                                      buildSectionTitle(context, 'Diseases'),
+                                    if (controller
+                                        .healthRecord.diseases!.isNotEmpty)
+                                      buildDiseaseContainer(
+                                          controller.healthRecord.diseases!),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ),
-                    )
-                  : GetBuilder(
-                      init: StepperController(),
-                      builder: (controller) => FutureBuilder(
-                        future: controller.getHealthRecordData(1),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Expanded(
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          } else if (snapshot.hasError) {
-                            return const Expanded(
-                                child: Center(child: Text("Error")));
-                          } else {
-                            return SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (controller
-                                      .healthRecord.radiographs!.isNotEmpty)
-                                    buildSectionTitle(context, 'Radiographs'),
-                                  if (controller
-                                      .healthRecord.radiographs!.isNotEmpty)
-                                    buildAnimatedListRad(
-                                        controller.healthRecord.radiographs!,
-                                        radiographController),
-                                  if (controller
-                                      .healthRecord.medicine!.isNotEmpty)
-                                    buildSectionTitle(context, 'Medicines'),
-                                  if (controller
-                                      .healthRecord.medicine!.isNotEmpty)
-                                    buildAnimatedListMed(
-                                        controller.healthRecord.medicine!,
-                                        medicineController),
-                                  if (controller
-                                      .healthRecord.diseases!.isNotEmpty)
-                                    buildSectionTitle(context, 'Diseases'),
-                                  if (controller
-                                      .healthRecord.diseases!.isNotEmpty)
-                                    buildDiseaseContainer(
-                                        controller.healthRecord.diseases!),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ));
   }
@@ -349,7 +353,14 @@ class HealthRecordScreen extends StatelessWidget {
             child: Card(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               elevation: 4,
-              child: Image.network(items[index].image, fit: BoxFit.cover),
+              child: Image.network(
+                items[index].image,
+                fit: BoxFit.cover,
+                headers: {
+                  'X-Token': 'Bearer $tokens()',
+                  'Authorization': basicAuth
+                },
+              ),
             ),
           );
         },
@@ -397,7 +408,14 @@ class HealthRecordScreen extends StatelessWidget {
             child: Card(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               elevation: 4,
-              child: Image.network(items[index].image, fit: BoxFit.cover),
+              child: Image.network(
+                items[index].image,
+                fit: BoxFit.cover,
+                headers: {
+                  'X-Token': 'Bearer $tokens()',
+                  'Authorization': basicAuth
+                },
+              ),
             ),
           );
         },
